@@ -14,22 +14,24 @@ const submitTask = async (req, res) => {
 
     // Build the file URL from multer's saved file
     // with a different PORT or base URL
-    const fileUrl = req.file
-      ? `http://localhost:5000/uploads/${req.file.filename}`
-      : req.body.fileUrl || null;
+    const fileUrls = req.files
+  ? req.files.map(
+      file => `http://localhost:5000/uploads/${file.filename}`
+    )
+  : [];
     // — no audit trail of re-submissions
     let submission = await Submission.findOne({ taskId, talentId: req.user._id });
 
     if (submission) {
       // Overwrite: update in place
-      submission.fileUrl = fileUrl;
+      submission.fileUrls = fileUrls;
       submission.notes = notes;
       await submission.save();
     } else {
       submission = await Submission.create({
         taskId,
         talentId: req.user._id,
-        fileUrl,
+        fileUrls,
         notes,
       });
     }
