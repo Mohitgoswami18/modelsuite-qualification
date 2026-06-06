@@ -46,6 +46,14 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
 
   const handleDelete = async (id) => {
     try {
+       // Adding logic for confirmination of destructive buttons
+
+      const confirmed = window.confirm(
+       "Are you sure you want to delete this task?"
+      );
+
+    if (!confirmed) return;
+
       await deleteTask(id);
       onRefresh();
     } catch {
