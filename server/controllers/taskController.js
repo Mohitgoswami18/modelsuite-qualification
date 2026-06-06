@@ -43,6 +43,7 @@ const createTask = async (req, res) => {
   try {
 
     // Adding the logic that only allow task to be assigned to Talents and not admins
+    // (Task - 1)
     if (assignedTo) {
     const user = await User.findById(assignedTo);
 
@@ -55,6 +56,21 @@ const createTask = async (req, res) => {
     if (user.role !== "Talent") {
         return res.status(400).json({
             message: "Tasks can only be assigned to Talent users"
+        });
+    }
+}
+
+  // Checking for due date logic (Task - 2)
+
+    if (dueDate) {
+    const selectedDate = new Date(dueDate);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+        return res.status(400).json({
+            message: "Due date cannot be in the past"
         });
     }
 }
