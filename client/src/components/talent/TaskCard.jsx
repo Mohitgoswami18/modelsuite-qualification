@@ -1,4 +1,5 @@
 ﻿import { claimTask } from '../../api/talent';
+import toast from 'react-hot-toast';
 
 const STATUS_CLASS = {
   Open:      'status-badge-Open',
@@ -14,8 +15,9 @@ const TaskCard = ({ task, showClaimButton = false, onClaimed }) => {
     try {
       await claimTask(task._id);
       if (onClaimed) onClaimed();
+      toast.success("Task claimed successfully!")
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to claim task');
+      toast.error(err.response?.data?.message || 'Failed to claim task');
     }
   };
 

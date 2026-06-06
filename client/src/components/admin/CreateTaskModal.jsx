@@ -1,8 +1,8 @@
 ﻿import { useState } from 'react';
 import { createTask, fetchTalents } from '../../api/tasks';
+import toast from 'react-hot-toast';
 
 const STATUS_OPTIONS = ['Open', 'Claimed', 'Submitted', 'Approved', 'Rejected'];
-
 const inputCls  = 'w-full bg-bg-input border border-border rounded-lg px-3.5 py-2.5 text-sm text-text-primary outline-none placeholder:text-[#4e4a6e] focus:border-primary focus:ring-[3px] focus:ring-primary/15 transition-all font-sans resize-y';
 const labelCls  = 'text-[11px] font-semibold uppercase tracking-[0.5px] text-text-muted';
 
@@ -14,7 +14,7 @@ const CreateTaskModal = ({ onClose, onCreated }) => {
     setLoadingTalents(true);
     fetchTalents()
       .then(({ data }) => setTalents(data))
-      .catch(() => alert('Failed to load talents'))
+      .catch(() => toast.error('Failed to load talents'))
       .finally(() => setLoadingTalents(false));
   }, []);
 
@@ -23,11 +23,13 @@ const CreateTaskModal = ({ onClose, onCreated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("creatig a task")
       const { data } = await createTask({ ...form, assignedTo: form.assignedTo || undefined });
       onCreated(data);
+      toast.success("Created Task successfully!")
       onClose();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to create task');
+      toast.error(err.response?.data?.message || 'Failed to create task');
     }
   };
 

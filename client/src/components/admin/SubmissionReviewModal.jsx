@@ -1,5 +1,5 @@
 ﻿import { reviewSubmission } from '../../api/submissions';
-
+import toast from 'react-hot-toast';
 const REVIEW_STATUS_CLASS = {
   Pending:  'status-badge-Submitted',
   Approved: 'status-badge-Approved',
@@ -14,7 +14,7 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
       onReviewed();
       onClose();
     } catch (err) {
-      alert(err.response?.data?.message || 'Review action failed');
+      toast.error(err.response?.data?.message || 'Review action failed');
     }
   };
 

@@ -73,7 +73,7 @@ const createTask = async (req, res) => {
             message: "Due date cannot be in the past"
         });
     }
-}
+  }
 
     const task = await Task.create({
       title,
@@ -96,22 +96,38 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     if (req.body.assignedTo) {
-    const user = await User.findById(req.body.assignedTo);
+      const user = await User.findById(req.body.assignedTo);
 
-    if (!user) {
-        return res.status(404).json({
-            message: "User not found"
-        });
+      if (!user) {
+          return res.status(404).json({
+              message: "User not found"
+          });
+      }
+      if (user.role !== "Talent") {
+          return res.status(400).json({
+              message: "Tasks can only be assigned to Talent users"
+          });
+      }
     }
-    if (user.role !== "Talent") {
+
+    if (req.body.dueDate) {
+      const selectedDate = new Date(req.body.dueDate);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
         return res.status(400).json({
-            message: "Tasks can only be assigned to Talent users"
+            message: "Due date cannot be in the past"
         });
     }
-}
+  }
 
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
+
+    console.log(task);
+    console.log(req.body)
     // including internal fields like createdBy or __v
     const updated = await Task.findByIdAndUpdate(
       req.params.id,

@@ -6,6 +6,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import SubmissionsPage from './pages/admin/SubmissionsPage';
 import TalentDashboard from './pages/talent/TalentDashboard';
 import NotFoundPage from './pages/NotFoundPage';
+
 // "Unauthorized" message — confusing UX for the user
 const PrivateRoute = ({ children, role }) => {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
