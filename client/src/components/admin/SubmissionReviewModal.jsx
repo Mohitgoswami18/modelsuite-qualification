@@ -10,6 +10,16 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
 
   const handleReview = async (status) => {
     try {
+
+      // Adding logic for confirmination of destructive buttons
+
+      if(status === 'Rejected') {
+        const confirmed = window.confirm(
+       "Are you sure you want to reject this submission?"
+      );
+        if (!confirmed) return;
+      }
+
       await reviewSubmission(submission._id, status);
       onReviewed();
       onClose();
